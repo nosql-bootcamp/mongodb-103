@@ -76,7 +76,7 @@ rs.initiate(rsconf)
 
 Vérifiez enfin que le cluster est correctement créé à l'aide de la commande `rs.status()`. Recherchez dans le résultat de la commande le statut du noeud `PRIMARY` :
 
-```json
+```
 {
   "_id": 2,
   "name": "localhost:27019",
@@ -102,3 +102,74 @@ Vérifiez enfin que le cluster est correctement créé à l'aide de la commande 
   "configVersion": 1
 }
 ```
+
+## Vie du cluster
+
+Essayez plusieurs choses sur le cluster Mongo :
+
+* **Arrêtez un noeud secondaire** et vérifiez le statut du cluster, notamment celui du noeud arrêté
+
+```
+{
+  "_id": 0,
+  "name": "localhost:27017",
+  "health": 0,
+  "state": 8,
+  "stateStr": "(not reachable/healthy)",
+  "uptime": 0,
+  "optime": {
+    "ts": Timestamp(0, 0),
+    "t": NumberLong("-1")
+  },
+  "optimeDurable": {
+    "ts": Timestamp(0, 0),
+    "t": NumberLong("-1")
+  },
+  "optimeDate": ISODate("1970-01-01T00:00:00Z"),
+  "optimeDurableDate": ISODate("1970-01-01T00:00:00Z"),
+  "lastHeartbeat": ISODate("2018-02-18T10:03:30.372Z"),
+  "lastHeartbeatRecv": ISODate("2018-02-18T10:03:17.447Z"),
+  "pingMs": NumberLong("0"),
+  "lastHeartbeatMessage": "Connection refused",
+  "configVersion": -1
+}
+```
+
+* **Arrêtez le deuxième noeud secondaire** et regardez ce qui se passe au niveau du statut du seul noeud restant (il n'y a plus de noeud primaire)
+
+```
+{
+  "_id": 2,
+  "name": "localhost:27019",
+  "health": 1,
+  "state": 2,
+  "stateStr": "SECONDARY",
+  "uptime": 156020,
+  "optime": {
+    "ts": Timestamp(1518948343, 1),
+    "t": NumberLong("12")
+  },
+  "optimeDate": ISODate("2018-02-18T10:05:43Z"),
+  "infoMessage": "could not find member to sync from",
+  "configVersion": 1,
+  "self": true
+}
+```
+
+* **Essayez d'insérer un document** via le seul noeud restant, l'écriture est impossible car il n'y a plus de noeud primaire
+
+```
+[SECONDARY:rs0] test> db.person.insert({name: "toto"})
+
+not master
+WriteResult({
+  "writeError": {
+    "code": 10107,
+    "errmsg": "not master"
+  }
+})
+```
+
+* **Redémarrez les deux noeuds précédemment arrêtés**, le cluster revient dans un état normal.
+
+* **Arrêtez le noeud primaire** et regardez l'évolution du statut du cluster : un nouveau noeud primaire a été élu.
