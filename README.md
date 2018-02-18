@@ -172,4 +172,18 @@ WriteResult({
 
 * **Redémarrez les deux noeuds précédemment arrêtés**, le cluster revient dans un état normal.
 
-* **Arrêtez le noeud primaire** et regardez l'évolution du statut du cluster : un nouveau noeud primaire a été élu.
+* **Arrêtez le noeud primaire** et regardez l'évolution du statut du cluster : un nouveau noeud primaire a été élu. Prenez le temps d'analyser les logs des noeuds. Extraits intéressants : 
+
+```
+2018-02-18T11:12:29.076+0100 I REPL     [replexec-1] Member localhost:27019 is now in state RS_DOWN
+...
+2018-02-18T11:12:38.472+0100 I REPL     [replexec-4] Starting an election, since we've seen no PRIMARY in the past 10000ms
+...
+2018-02-18T11:12:38.472+0100 I REPL     [replexec-4] conducting a dry run election to see if we could be elected. current term: 14
+2018-02-18T11:12:38.473+0100 I REPL     [replexec-1] VoteRequester(term 14 dry run) received a yes vote from localhost:27017; response message: { term: 14, voteGranted: true, reason: "", ok: 1.0, operationTime: Timestamp(1518948741, 1), $clusterTime: { clusterTime: Timestamp(1518948741, 1), signature: { hash: BinData(0, 0000000000000000000000000000000000000000), keyId: 0 } } }
+...
+2018-02-18T11:12:38.499+0100 I REPL     [replexec-0] election succeeded, assuming primary role in term 15
+2018-02-18T11:12:38.499+0100 I REPL     [replexec-0] transition to PRIMARY from SECONDARY
+2018-02-18T11:12:38.499+0100 I REPL     [replexec-0] Entering primary catch-up mode.
+...
+```
