@@ -50,19 +50,19 @@ Définissez la configuration du cluster dans le shell Mongo :
 
 ```json
 rsconf = {
-  _id: "rs0",
-  members: [
+  "_id": "rs0",
+  "members": [
     {
-     _id: 0,
-     host: "localhost:27017"
+     "_id": 0,
+     "host": "localhost:27017"
     },
     {
-     _id: 1,
-     host: "localhost:27018"
+     "_id": 1,
+     "host": "localhost:27018"
     },
     {
-     _id: 2,
-     host: "localhost:27019"
+     "_id": 2,
+     "host": "localhost:27019"
     }
    ]
 }
@@ -76,7 +76,7 @@ rs.initiate(rsconf)
 
 Vérifiez enfin que le cluster est correctement créé à l'aide de la commande `rs.status()`. Recherchez dans le résultat de la commande le statut du noeud `PRIMARY` :
 
-```
+```json
 {
   "_id": 2,
   "name": "localhost:27019",
