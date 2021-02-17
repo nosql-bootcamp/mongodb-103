@@ -8,7 +8,7 @@
 
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">mongodb-103</span> par <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/nosql-bootcamp/mongodb-103" property="cc:attributionName" rel="cc:attributionURL">Chris WOODROW, Sébastien PRUNIER et Benjamin CAVY</a> est distribué sous les termes de la licence <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons - Attribution - NonCommercial - ShareAlike</a>.
 
-Ce workshop est basé sur la **version 4.2.3** de MongoDB.
+Ce workshop est basé sur la **version 4.4.3** de MongoDB.
 
 ## Pré requis
 
@@ -48,7 +48,7 @@ mongo --port 27017
 
 Définissez la configuration du cluster dans le shell Mongo : 
 
-```json
+```javascript
 rsconf = {
   "_id": "rs0",
   "members": [
@@ -70,13 +70,13 @@ rsconf = {
 
 Puis initialisez le cluster à partir de cette configuration : 
 
-```
+```javascript
 rs.initiate(rsconf)
 ```
 
 Vérifiez enfin que le cluster est correctement créé à l'aide de la commande `rs.status()`. Recherchez dans le résultat de la commande le statut du noeud `PRIMARY` :
 
-```json
+```javascript
 {
   "_id": 0,
   "name": "localhost:27017",
@@ -107,7 +107,7 @@ Essayez plusieurs choses sur le cluster Mongo :
 
 * **Arrêtez un noeud secondaire** et vérifiez le statut du cluster, notamment celui du noeud arrêté
 
-```json
+```javascript
 {
   "_id": 2,
   "name": "localhost:27019",
@@ -139,7 +139,7 @@ Essayez plusieurs choses sur le cluster Mongo :
 
 * **Arrêtez le deuxième noeud secondaire** et regardez ce qui se passe au niveau du statut du seul noeud restant (il n'y a plus de noeud primaire)
 
-```json
+```javascript
 {
   "_id": 0,
   "name": "localhost:27017",
@@ -168,7 +168,7 @@ Essayez plusieurs choses sur le cluster Mongo :
 test> db.person.insert({name: "toto"})
 ```
 
-```
+```javascript
 WriteCommandError({
   "operationTime": Timestamp(1581685598, 1),
   "ok": 0,
