@@ -1,6 +1,6 @@
 # MongoDB 103
 
-![mongo-logo](https://upload.wikimedia.org/wikipedia/en/thumb/4/45/MongoDB-Logo.svg/300px-MongoDB-Logo.svg.png)
+![mongo-logo](https://upload.wikimedia.org/wikipedia/fr/4/45/MongoDB-Logo.svg)
 
 **MongoDB 103** est un workshop permettant d'installer et de configurer un cluster MongoDB.
 
