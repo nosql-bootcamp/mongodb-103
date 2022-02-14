@@ -1,0 +1,84 @@
+version: "3.1"
+
+services:
+  ###########
+  ## MONGO ##
+  ###########
+  mongo-1:
+    image: mongo:latest
+    container_name: "mongo-1"
+    restart: always
+    expose:
+      - 27017
+    healthcheck:
+      test: mongo --eval "db.adminCommand('ping')"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    volumes:
+      - mongo-db-storage-1:/data/db
+    entrypoint: [ "/usr/bin/mongod", "--replSet", "rsmongo", "--bind_ip_all"]
+    networks:
+      - mongo-cluster
+
+  mongo-2:
+    image: mongo:latest
+    container_name: "mongo-2"
+    restart: always
+    expose:
+      - 27017
+    healthcheck:
+      test: mongo --eval "db.adminCommand('ping')"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    volumes:
+      - mongo-db-storage-2:/data/db
+    entrypoint: [ "/usr/bin/mongod", "--replSet", "rsmongo", "--bind_ip_all"]
+    networks:
+      - mongo-cluster
+
+  mongo-3:
+    image: mongo:latest
+    container_name: "mongo-3"
+    restart: always
+    expose:
+      - 27017
+    healthcheck:
+      test: mongo --eval "db.adminCommand('ping')"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    volumes:
+      - mongo-db-storage-3:/data/db
+    entrypoint: [ "/usr/bin/mongod", "--replSet", "rsmongo", "--bind_ip_all"]
+    networks:
+      - mongo-cluster
+
+  #################
+  ## SETUP MONGO ##
+  #################
+  # Init mongo replica set using init script
+  mongo-setup:
+    image: mongo:latest
+    restart: "no"
+    depends_on:
+      - mongo-1
+      - mongo-2
+      - mongo-3
+    volumes:
+      - ./setup/setup-replica.js:/setup-replica.js
+    networks:
+      - mongo-cluster
+    entrypoint: mongo --host mongo-1:27017 /setup-replica.js      
+    
+volumes:
+  mongo-db-storage-1:
+  mongo-db-storage-2:
+  mongo-db-storage-3:
+
+networks:
+  mongo-cluster:
